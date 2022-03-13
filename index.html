@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div id="app">
+			<custom-form />
+		</div>
+
+		<script src="https://unpkg.com/vue@next"></script>
+		<script>
+			const app = Vue.createApp({
+				data: function () {
+					return {
+						text: "abc",
+					};
+				},
+				methods: {
+					toggleDiv: function () {
+						this.conditional = !this.conditional;
+					},
+				},
+			});
+
+			app.component("custom-form", {
+				template: `<form  @submit.prevent="handleSubmit">
+					<h2> {{formTitle}} </h2>
+					<custom-input
+					v-for="(input, i ) in inputs"
+					:label="input.label"
+					:type="input.type"
+					v-model="input.value"
+					/>
+
+					<button> Enviar </button>
+					</form>`,
+				components: ["custom-input"],
+				data: function () {
+					return {
+						formTitle: "Custom Form",
+						inputs: [
+							{
+								label: "Nome",
+								value: "Delano",
+								placeholder: "Digite um nome",
+								type: "text",
+							},
+							{
+								label: "Idade",
+								value: "20",
+								placeholder: "Digite sua idade",
+								type: "number",
+							},
+						],
+					};
+				},
+				methods: {
+					handleSubmit: function () {
+						this.inputs.forEach((input) => {
+							console.log(input.value);
+						});
+					},
+				},
+			});
+
+			app.component("custom-input", {
+				template: `
+					<label>
+						{{label}}
+						<input :type="type" v-model="inputValue">
+					</label>
+				`,
+				props: ["label", "type", "modelValue"],
+				computed: {
+					inputValue: {
+						get() {
+							return this.modelValue;
+						},
+						set(value) {
+							this.$emit("update:modelValue", value);
+						},
+					},
+				},
+				// data: function () {
+				// 	return {
+				// 		inputValue: "Teste",
+				// 	};
+				// },
+				// methods: {
+				// 	change: function () {
+				// 		console.log(this.inputValue);
+				// 	},
+				// },
+			});
+
+			app.mount("#app");
+		</script>
+	</body>
+</html>
