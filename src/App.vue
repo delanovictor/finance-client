@@ -19,4 +19,9 @@ export default {}
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+textarea {
+    padding: 5px;
+    height: 100%;
+}
 </style>

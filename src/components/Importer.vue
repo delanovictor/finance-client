@@ -2,7 +2,8 @@
     <transition name="slide-fade">
         <div class="modal-mask">
             <div class="modal-wrapper">
-                <div class="modal-container">
+
+                <div class="modal-container bg-gray-800  ">
                     <div class="modal-close float-right ml-2">
                         <button
                             class="modal-default-button"
@@ -42,6 +43,7 @@
                                 :key="index"
                                 :index="index"
                                 :date="rowData.date"
+                                :class="[index % 2 == 0 ? 'bg-gray-800' : 'bg-gray-900', 'text-gray-100']"
                                 v-model:description="rowData.description"
                                 v-model:value="rowData.value"
                                 v-model:category="rowData.category"

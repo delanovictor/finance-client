@@ -3,13 +3,7 @@
 
         <div class="flex justify-center  bg-indigo-900">
             <div class="cursor-pointer">
-                <button
-                    id="show-modal"
-                    @click="showModal = true"
-                ><img
-                        src="https://img.icons8.com/ios-glyphs/30/000000/import.png"
-                        style="width: 25px; height: 25px"
-                    /></button>
+
                 <!-- use the modal component, pass in the prop -->
 
                 <transition name="modal">
@@ -59,45 +53,6 @@
                 </div>
             </div>
 
-            <div class="cursor-pointer text-center ">
-                <div @click="showFilterMenu"><img
-                        src="https://img.icons8.com/ios-glyphs/30/000000/filter.png"
-                        style="width: 25px; height: 25px"
-                    /></div>
-                <div
-                    v-if="activeFilter"
-                    class="m-1 p-2 bg-gray-200 "
-                >
-                    <select
-                        name="category"
-                        id="category"
-                        class="w-full"
-                        @change="(e)=> {filterCategory = e.target.value}"
-                    >
-                        <optgroup
-                            v-for="option in categories"
-                            :key="option.category"
-                            :label="option.category"
-                        >
-                            <option
-                                v-for="subCategory in option.subCategory"
-                                :key="subCategory"
-                                :value="option.category + '>' + subCategory"
-                            >{{subCategory}}
-                            </option>
-
-                        </optgroup>
-
-                    </select>
-                    <div class="flex justify-end pt-4 cursor-pointer">
-                        <button
-                            @click="resetFilter"
-                            class="rounded-3xl px-10 py-3 bg-red-800 text-gray-100 font-bold"
-                        >Resetar</button>
-                    </div>
-                </div>
-            </div>
-
             <div
                 class="cursor-pointer  "
                 @click="showMenu"
@@ -120,14 +75,87 @@
 
         </div>
 
+        <div class=" flex text-gray-100  text-xl  text-center justify-between">
+            <div class="bg-indigo-700 w-1/5 ">R$ 20.000</div>
+
+            <div class=" flex w-1/2 justify-between">
+                <input
+                    class="w-3/4 text-gray-100 p-1 rounded-md bg-gray-900 border-gray-600 border-2"
+                    type="text"
+                    @keyup="(e)=> {filter.description = e.target.value}"
+                    placeholder="Procurar..."
+                >
+
+                <div class="cursor-pointer text-center">
+                    <div @click="showFilterMenu">
+                        <!-- <img
+                            @v-if="!activeFilter"
+                            class="text-white"
+                            :src="require(`@/assets/filter.svg`)"
+                            style="width: 25px; height: 25px"
+                        /> -->
+                    </div>
+                    <div class="flex m-1 p-2  ">
+                        <select
+                            name="category"
+                            id="category"
+                            class="w-full bg-gray-700 p-2 rounded-lg text-sm"
+                            @change="(e)=> {filter.category = e.target.value}"
+                        >
+                            <optgroup
+                                v-for="option in categories"
+                                :key="option.category"
+                                :label="option.category"
+                            >
+                                <option
+                                    v-for="subCategory in option.subCategory"
+                                    :key="subCategory"
+                                    :value="option.category + '>' + subCategory"
+                                >{{subCategory}}
+                                </option>
+
+                            </optgroup>
+
+                        </select>
+
+                        <select
+                            name="paymentTypes"
+                            id="paymentTypes"
+                            class="w-full bg-gray-700 p-2 rounded-lg text-sm"
+                            @change="(e)=> {filter.paymentType = e.target.value}"
+                        >
+                            <option
+                                v-for="type in paymentTypes"
+                                :key="type"
+                                :value="type"
+                            >{{type}}
+                            </option>
+
+                        </select>
+
+                        <div
+                            class=" justify-end pt-4 cursor-pointer"
+                            @click="resetFilter"
+                        >
+                            x </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="mx-2 mt-10">
-            <Table :filterCategory="filterCategory" />
+            <Table :filter="filter" />
         </div>
 
         <AddRow
             v-if="activeMenu"
             @update-row="updateRow"
         />
+
+        <div
+            id="show-modal"
+            @click="showModal = true"
+            class="fixed bg-indigo-700 hover:bg-indigo-800 transform transition duration-200 hover:scale-110  shadow-2xl bottom-5 right-12 px-6  py-5 rounded-full cursor-pointer "
+        >x</div>
     </div>
 </template>
 
@@ -151,7 +179,7 @@ export default {
       activeEdit: false,
       activeFilter: false,
       editCategory: null,
-      filterCategory: null
+      filter: {}
     }
   },
   methods: {
@@ -167,11 +195,11 @@ export default {
       this.activeEdit = !this.activeEdit
     },
     showFilterMenu () {
-      console.log(this.filterCategory)
+      console.log(this.filter)
       this.activeFilter = !this.activeFilter
     },
     resetFilter () {
-      this.filterCategory = null
+      this.filter = {}
     },
     updateRow (rowData) {
       this.rows = rowData
@@ -188,7 +216,10 @@ export default {
   },
   computed: {
     ...mapGetters(['getSelectedRows']),
-    ...mapGetters({ categories: 'getCategories' })
+    ...mapGetters({
+      categories: 'getCategories',
+      paymentTypes: 'getPaymentTypes'
+    })
   },
   async mounted () {
     await this.fetchRows()

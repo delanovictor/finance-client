@@ -3,13 +3,13 @@
     <div class="w-full ">
         <div class="flex py-1 justify-center 	">
             <div
-                class="m-1 w-1/12 p-2  bg-gray-200  text-center  align-middle "
+                class="m-1 w-1/12 p-2   text-center  align-middle "
                 @click="deleteRow()"
             >
                 X
 
             </div>
-            <div class="m-1 p-2  align-middle inline-block  bg-gray-200  text-center">
+            <div class="m-1 p-2  align-middle inline-block   text-center">
                 <!-- <input
                     type="date"
                     name="date"
@@ -20,32 +20,32 @@
 
                 {{new Date(formatDate(date)).toLocaleDateString()}}
             </div>
-            <div class="m-1 w-1/6  w-1/5p-2  bg-gray-200">
+            <div class="mb-2 w-1/5 py-2   ">
                 <input
                     type="text"
                     name="value"
-                    class="w-full text-center"
+                    class="h-full border-2 border-gray-600 rounded-md w-full text-center bg-transparent"
                     id="value"
                     :value="value"
                     @input="$emit('update:value', $event.target.value)"
                 />
 
             </div>
-            <div class="m-1 w-1/2 p-2  bg-gray-200">
+            <div class="m-1 w-1/2 py-1 px-0 h-full  ">
                 <textarea
                     rows="2"
                     name="description"
                     id="description"
-                    class="pd-1 w-full"
+                    class=" w-full bg-transparent border-2 pd-1 box-border  rounded-md border-gray-700"
                     :value="description"
                     @input="$emit('update:description', $event.target.value)"
                 />
             </div>
-            <div class="m-1 w-1/6 p-2 bg-gray-200 ">
+            <div class="m-1 w-1/6 p-2  ">
                 <select
                     name="category"
                     id="category"
-                    class="w-full"
+                    class="w-full bg-gray-700 p-2 rounded-lg"
                     :value="category"
                     @change="$emit('update:category', $event.target.value)"
                 >
@@ -65,11 +65,11 @@
 
                 </select>
             </div>
-            <div class="m-1 w-1/6 p-2 bg-gray-200 ">
+            <div class="m-1 w-1/6 p-2 ">
                 <select
                     name="paymentType"
                     id="paymentType"
-                    class="w-full"
+                    class="w-full bg-gray-700 p-2 rounded-lg"
                     :value="paymentType"
                     @change="$emit('update:paymentType', $event.target.value)"
                 >

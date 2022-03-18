@@ -21,7 +21,7 @@ export default {
   components: {
     Row
   },
-  props: ['filterCategory'],
+  props: ['filter'],
   computed: {
     ...mapGetters({ rows: 'getRows' }),
 
@@ -30,9 +30,28 @@ export default {
         row.check = true
       })
 
-      return this.rows.filter(
-        (row) => row.category === this.filterCategory || !this.filterCategory
-      )
+      return this.rows.filter((row) => {
+        if (!this.filter) return true
+
+        console.log(this.filter)
+        console.log(row)
+
+        for (const key in this.filter) {
+          if (this.filter[key]) {
+            if (
+              row[key]
+                .toString()
+                .toLowerCase()
+                .trim()
+                .indexOf(this.filter[key].toLowerCase()) == -1
+            ) {
+              return false
+            }
+          }
+        }
+
+        return true
+      })
     }
   },
   method: {
