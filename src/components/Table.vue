@@ -71,22 +71,4 @@ export default {
     max-height: 85vh;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: rgb(158, 207, 195);
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: rgb(178, 195, 224);
-}
 </style>

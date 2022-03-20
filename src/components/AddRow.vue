@@ -3,45 +3,55 @@
     <div class="w-full ">
         <div class="flex py-1 justify-center 	">
             <div
-                class="m-1 w-1/12 p-2   text-center  align-middle "
+                class="m-1 w-1/12 p-2 text-center  align-middle self-center"
                 @click="deleteRow()"
             >
-                X
+                <img
+                    :src="require(`@/assets/close.svg`)"
+                    class="text-gray-300"
+                    style="width: 25px; height: 25px"
+                />
 
             </div>
-            <div class="m-1 p-2  align-middle inline-block   text-center">
-                <!-- <input
+            <div class="mx-2 p-2  w-1/6 align-middle inline-block   text-center self-center">
+
+                <input
                     type="date"
                     name="date"
                     id="date"
-                    class=""
-                    :value="formatDate(date)"
-                /> -->
+                    class="bg-gray-700 rounded-md p-1 "
+                    :value="date"
+                    @change="$emit('update:date', formatDate($event.target.value)), updateRows($event.target.value)"
+                />
 
-                {{new Date(formatDate(date)).toLocaleDateString()}}
+                <!-- <div
+                    class="w-full"
+                    v-if="!dateEditable"
+                > {{new Date(formatDate(date)).toLocaleDateString()}}</div> -->
+
             </div>
-            <div class="mb-2 w-1/5 py-2   ">
+            <div class=" m-3 self-center  w-1/6">
                 <input
                     type="text"
                     name="value"
-                    class="h-full border-2 border-gray-600 rounded-md w-full text-center bg-transparent"
+                    class=" border-b-2 border-gray-700 m-0  pb-4 w-full text-center bg-transparent"
                     id="value"
                     :value="value"
                     @input="$emit('update:value', $event.target.value)"
                 />
 
             </div>
-            <div class="m-1 w-1/2 py-1 px-0 h-full  ">
+            <div class="m-3 w-1/2 py-1 px-0 h-full  ">
                 <textarea
                     rows="2"
                     name="description"
                     id="description"
-                    class=" w-full bg-transparent border-2 pd-1 box-border  rounded-md border-gray-700"
+                    class=" w-full bg-transparent border-b-2 pd-1 box-border   border-gray-700"
                     :value="description"
                     @input="$emit('update:description', $event.target.value)"
                 />
             </div>
-            <div class="m-1 w-1/6 p-2  ">
+            <div class="m-1 w-1/6 p-2   self-center">
                 <select
                     name="category"
                     id="category"
@@ -65,7 +75,7 @@
 
                 </select>
             </div>
-            <div class="m-1 w-1/6 p-2 ">
+            <div class="m-1 w-1/6 p-2  self-center">
                 <select
                     name="paymentType"
                     id="paymentType"
@@ -91,7 +101,15 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  props: ['date', 'description', 'value', 'category', 'index', 'paymentType'],
+  props: [
+    'date',
+    'description',
+    'value',
+    'category',
+    'index',
+    'paymentType',
+    'dateEditable'
+  ],
   methods: {
     handleSubmit () {
       const newRow = {
@@ -115,13 +133,14 @@ export default {
 
       this.$emit('update-row', tempLocalStorage)
     },
-    updateRows () {},
     formatDate (date) {
-      let formatedDate = date.split('/')
-      formatedDate = formatedDate.reverse()
-      formatedDate = formatedDate.join('-')
+      if (date) {
+        let formatedDate = date.split('/')
+        formatedDate = formatedDate.reverse()
+        formatedDate = formatedDate.join('-')
 
-      return formatedDate
+        return formatedDate
+      }
     },
     deleteRow () {
       console.log(this.index)
@@ -134,9 +153,6 @@ export default {
       paymentTypes: 'getPaymentTypes'
     })
   },
-  mounted () {
-    console.log(this.date)
-    console.log(this.paymentType)
-  }
+  mounted () {}
 }
 </script>

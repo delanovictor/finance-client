@@ -1,18 +1,7 @@
 <template>
-    <div class="home bg-black h-screen text-sm">
+    <div class="home bg-black h-screen text-sm overflow-hidden">
 
         <div class="flex justify-center  bg-indigo-900">
-            <div class="cursor-pointer">
-
-                <!-- use the modal component, pass in the prop -->
-
-                <transition name="modal">
-                    <Importer
-                        v-if="showModal"
-                        @close="showModal = false"
-                    />
-                </transition>
-            </div>
 
             <div class="cursor-pointer text-center ">
                 <div @click="showEditMenu"><img
@@ -51,16 +40,6 @@
                         >Salvar</button>
                     </div>
                 </div>
-            </div>
-
-            <div
-                class="cursor-pointer  "
-                @click="showMenu"
-            >
-                <img
-                    src="https://img.icons8.com/fluency-systems-regular/48/000000/add--v1.png"
-                    style="width: 25px; height: 25px"
-                />
             </div>
 
             <div
@@ -142,20 +121,30 @@
                 </div>
             </div>
         </div>
-        <div class="mx-2 mt-10">
+
+        <div class=" mt-10 bg-gray-900 shadow-2xl">
             <Table :filter="filter" />
         </div>
-
-        <AddRow
-            v-if="activeMenu"
-            @update-row="updateRow"
-        />
 
         <div
             id="show-modal"
             @click="showModal = true"
-            class="fixed bg-indigo-700 hover:bg-indigo-800 transform transition duration-200 hover:scale-110  shadow-2xl bottom-5 right-12 px-6  py-5 rounded-full cursor-pointer "
-        >x</div>
+            class="fixed bg-indigo-700 hover:bg-indigo-800 transform transition duration-200 hover:scale-110  shadow-2xl bottom-5 right-12 px-5  py-5 rounded-full cursor-pointer "
+        >
+            <img
+                class="text-gray-300"
+                :src="require(`@/assets/plus.png`)"
+                style="width: 25px; height: 25px"
+            />
+        </div>
+
+        <transition name="modal">
+            <Importer
+                v-if="showModal"
+                @close="showModal = false"
+            />
+        </transition>
+
     </div>
 </template>
 

@@ -4,18 +4,33 @@
         :id="rowData._id"
         @click.ctrl="handleCheck($event, true)"
     >
-        <label
-            :for="key"
-            class="w-1/12 p-3  m-1   text-center self-center"
-        >
-            <input
-                type="checkbox"
-                name="select-row"
-                :id="key"
-                v-model="checkValue"
-                @change="handleCheck"
+
+        <div class="w-1/12 p-3  m-1   text-center self-center">
+            <label
+                class="border-gray-600 rounded-md border-2 cursor-pointer px-2 checkbox relative"
+                :class="checkValue? 'bg-green-700 border-green-700':''"
+                :for="key"
             >
-        </label>
+
+                <span
+                    v-if="checkValue"
+                    class="absolute left-0"
+                ><img
+                        :src="require(`@/assets/check.png`)"
+                        style="width: 28px; height: 20px"
+                    /></span>
+                <input
+                    type="checkbox"
+                    class="hidden"
+                    name="select-row"
+                    :id="key"
+                    v-model="checkValue"
+                    @change="handleCheck"
+                >
+
+            </label>
+        </div>
+
         <div class="w-1/12 p-3   m-1  self-center text-center"> {{new Date(rowData.date).toLocaleDateString()}} </div>
         <div class="w-2/4 p-3  m-1 self-center "> {{rowData.description}} </div>
         <span
@@ -109,3 +124,6 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+</style>
