@@ -17,63 +17,76 @@
                         </button>
                     </div>
 
-                    <div class="">
-                        <div class="edit-rows overflow-auto border-2 border-gray-700 rounded-2xl">
+                    <div class="modal-body">
+                        <div class="edit-rows overflow-auto border-2 border-gray-700 rounded-2xl overflow-x-hidden">
 
-                            <AddRow
-                                v-for="(rowData, index) in newRows"
-                                :key="index"
-                                :index="index"
-                                :class="[index % 2 == 0 ? 'bg-gray-800' : 'bg-gray-900', 'text-gray-100']"
-                                :dateEditable="rowData.manual"
-                                v-model:date="rowData.date"
-                                v-model:description="rowData.description"
-                                v-model:value="rowData.value"
-                                v-model:category="rowData.category"
-                                v-model:paymentType="rowData.paymentType"
-                                v-on:delete-row="deleteThisRow(index)"
-                            />
+                            <TransitionGroup
+                                name="list"
+                                tag="ul"
+                            >
+                                <li
+                                    v-for="(rowData, index) in newRows"
+                                    :key="rowData.key"
+                                >
+
+                                    <AddRow
+                                        :key="index"
+                                        :index="index"
+                                        :class="[index % 2 == 0 ? 'bg-gray-800' : 'bg-gray-900', 'text-gray-100']"
+                                        :dateEditable="rowData.manual"
+                                        v-model:date="rowData.date"
+                                        v-model:description="rowData.description"
+                                        v-model:value="rowData.value"
+                                        v-model:category="rowData.category"
+                                        v-model:paymentType="rowData.paymentType"
+                                        v-on:delete-row="deleteThisRow(index)"
+                                    />
+
+                                </li>
+
+                            </TransitionGroup>
+
                         </div>
+                        <div class="flex justify-between  self-center mx-5  pt-4 cursor-pointer bottom-0">
+                            <div class="">
+                                <label
+                                    for="importer"
+                                    class=""
+                                    accept=".csv"
+                                >
+                                    <div class="rounded-3xl px-10 py-3 bg-purple-900  text-gray-100 font-bold cursor-pointer">Importar</div>
 
-                    </div>
-                    <div class="flex justify-between  self-center mx-5  pt-4 cursor-pointer bottom-0">
-                        <div class="">
-                            <label
-                                for="importer"
-                                class=""
-                                accept=".csv"
-                            >
-                                <div class="rounded-3xl px-10 py-3 bg-purple-900  text-gray-100 font-bold cursor-pointer">Importar</div>
-
-                            </label>
-                            <input
-                                type="file"
-                                name="importer"
-                                id="importer"
-                                class="hidden"
-                                @change="importFile"
-                            >
-                        </div>
-
-                        <div class="w-full text-center flex justify-center">
-                            <div
-                                @click="createRow()"
-                                class="  text-gray-300 text-4xl rounded-full py-3 px-3 bg-gray-500 hover:bg-gray-700"
-                            >
-                                <img
-                                    :src="require(`@/assets/plus.png`)"
-                                    class="text-gray-300"
-                                    style="width: 20px; height: 20px"
-                                />
+                                </label>
+                                <input
+                                    type="file"
+                                    name="importer"
+                                    id="importer"
+                                    class="hidden"
+                                    @change="importFile"
+                                >
                             </div>
+
+                            <div class="w-full text-center flex justify-center">
+                                <div
+                                    @click="createRow()"
+                                    class="  text-gray-300 text-4xl rounded-full py-3 px-3 bg-gray-500 hover:bg-gray-700"
+                                >
+                                    <img
+                                        :src="require(`@/assets/plus.png`)"
+                                        class="text-gray-300"
+                                        style="width: 20px; height: 20px"
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                @click="saveRows"
+                                class="rounded-3xl px-10 py-3 bg-green-800 text-gray-100 font-bold"
+                            >Salvar</button>
+
                         </div>
-
-                        <button
-                            @click="saveRows"
-                            class="rounded-3xl px-10 py-3 bg-green-800 text-gray-100 font-bold"
-                        >Salvar</button>
-
                     </div>
+
                 </div>
             </div>
         </div>
@@ -123,16 +136,12 @@ export default {
                   if (paymentString.indexOf('PIX') > -1) {
                     newRow.paymentType = 'Pix'
                   } else {
-                    // if (paymentString.indexOf('CARTAO') > -1) {
                     newRow.paymentType = 'Cartão'
-                    // } else {
-                    // newRow.paymentType = 'Cartão'
-                    // }
                   }
 
                   newRow.description = description.join('-')
 
-                  console.log(newRow)
+                  newRow.category = self.guessCategory(newRow.description)
 
                   break
                 case 2:
@@ -144,11 +153,8 @@ export default {
               }
             })
 
-            newRow.category = 'Outros>Indefinido'
-
             newRow.key = Math.random().toString()
 
-            console.log(newRow)
             self.newRows.push(newRow)
           }
 
@@ -180,8 +186,31 @@ export default {
         category: 'Outros>Indefinido',
         paymentType: 'Pix',
         description: '',
-        date: today
+        date: today,
+        key: Math.random().toString()
       })
+    },
+    guessCategory (description) {
+      let guess = 'Outros>Indefinido'
+
+      if (description) {
+        const categories = {
+          'Transporte>Onibus': ['GUICHE VIRTUAL'],
+          'Transporte>Uber': ['UBER'],
+          'Casa>Spotify': ['SPOTIFY']
+        }
+
+        for (const category in categories) {
+          categories[category].forEach((keyWord) => {
+            if (description.includes(keyWord)) {
+              guess = category
+            }
+          })
+        }
+      }
+
+      console.log(guess)
+      return guess
     },
     async saveRows () {
       await this.appendRows(this.newRows)
@@ -196,8 +225,46 @@ export default {
 }
 </script>
 <style >
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: table;
+    transition: opacity 0.3s ease;
+    overflow: hidden;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.modal-container {
+    width: 1000px;
+    margin: 25px auto;
+    padding: 20px 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-header h3 {
+    margin-top: 0;
+    color: #42b983;
+}
+
+.modal-body {
+    margin: 20px 0;
+    transition: height 1s ease;
+    max-height: 55vh;
+}
+
 .edit-rows {
-    min-height: 400px;
-    max-height: 600px;
+    height: 50vh;
 }
 </style>

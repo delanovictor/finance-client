@@ -1,4 +1,5 @@
 <template>
+
     <div
         class="flex mt-2 mb-2 align-middle rounded-md h-20 justify-between pr-3"
         :id="rowData._id"
@@ -6,29 +7,39 @@
     >
 
         <div class="w-1/12 p-3  m-1   text-center self-center">
-            <label
-                class="border-gray-600 rounded-md border-2 cursor-pointer px-2 checkbox relative"
-                :class="checkValue? 'bg-green-700 border-green-700':''"
-                :for="key"
+            <Transition
+                name="check"
+                tag="div"
             >
-
-                <span
-                    v-if="checkValue"
-                    class="absolute left-0"
-                ><img
-                        :src="require(`@/assets/check.png`)"
-                        style="width: 28px; height: 20px"
-                    /></span>
-                <input
-                    type="checkbox"
-                    class="hidden"
-                    name="select-row"
-                    :id="key"
-                    v-model="checkValue"
-                    @change="handleCheck"
+                <label
+                    class="border-gray-600 rounded-md border-2 cursor-pointer px-2 checkbox relative transition-colors duration-100 ease-in-out"
+                    :class="checkValue? 'bg-green-700 border-green-700':''"
+                    :for="key"
                 >
 
-            </label>
+                    <span
+                        v-if="checkValue"
+                        class="absolute left-0"
+                    >
+                        <img
+                            :src="require(`@/assets/check.png`)"
+                            style="width: 28px; height: 20px"
+                        />
+
+                    </span>
+
+                    <input
+                        type="checkbox"
+                        class="hidden"
+                        name="select-row"
+                        :id="key"
+                        v-model="checkValue"
+                        @change="handleCheck"
+                    >
+
+                </label>
+
+            </Transition>
         </div>
 
         <div class="w-1/12 p-3   m-1  self-center text-center"> {{new Date(rowData.date).toLocaleDateString()}} </div>
@@ -126,4 +137,17 @@ export default {
 </script>
 
 <style scoped>
+/* .check-enter-active,
+.check-leave-active {
+    transition: all 0.5s ease;
+}
+.check-enter-from {
+    opacity: 0;
+    transform: translateX(-1000px);
+}
+
+.check-leave-to {
+    opacity: 0;
+    transform: translateX(1000px);
+} */
 </style>

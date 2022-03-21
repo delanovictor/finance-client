@@ -220,13 +220,13 @@ export default {
 #app {
     overflow: auto;
 }
+
 .modal-enter-from {
     opacity: 0;
 }
 .modal-enter-active {
     transition: all 0.3s ease;
 }
-
 .modal-leave-to {
     opacity: 0;
 }

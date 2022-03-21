@@ -3,12 +3,12 @@
     <div class="w-full ">
         <div class="flex py-1 justify-center 	">
             <div
-                class="m-1 w-1/12 p-2 text-center  align-middle self-center"
+                class="m-1 w-1/12 p-2 text-center  align-middle self-center  "
                 @click="deleteRow()"
             >
                 <img
                     :src="require(`@/assets/close.svg`)"
-                    class="text-gray-300"
+                    class="text-gray-300 cursor-pointer hover:bg-red-500 rounded-full p-1 "
                     style="width: 25px; height: 25px"
                 />
 

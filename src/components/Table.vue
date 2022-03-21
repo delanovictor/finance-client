@@ -1,15 +1,27 @@
 <template>
     <div
-        class=" p-3 overflow-auto shadow-2xl rounded-2xl  "
+        class=" p-3 overflow-y-auto overflow-x-hidden  shadow-2xl rounded-2xl  "
         id="table-container"
     >
-        <Row
-            v-for="(row, index) in getActiveRows"
-            :class="[index % 2 == 0 ? 'bg-gray-800' : 'bg-gray-900', 'text-gray-100']"
-            :key="row._id"
-            :rowData="row"
-            :checkValue="row.checkValue"
-        />
+        <TransitionGroup
+            name="list"
+            tag="ul"
+        >
+
+            <li
+                v-for="(row, index) in getActiveRows"
+                :key="row._id"
+            >
+                <Row
+                    :class="[index % 2 == 0 ? 'bg-gray-800' : 'bg-gray-900', 'text-gray-100']"
+                    :rowData="row"
+                    :key="row._id"
+                    :checkValue="row.checkValue"
+                />
+            </li>
+
+        </TransitionGroup>
+
     </div>
 </template>
 
@@ -20,6 +32,11 @@ import { mapGetters } from 'vuex'
 export default {
   components: {
     Row
+  },
+  data () {
+    return {
+      arrayTeste: ['aa', 'bb', 'cc']
+    }
   },
   props: ['filter'],
   computed: {
@@ -54,14 +71,14 @@ export default {
       })
     }
   },
-  method: {
+  methods: {
     getClass: function (index) {
       if (index % 2 == 0) return 'bg-red-400'
       else return 'bg-green'
+    },
+    removeItem: function (index) {
+      this.arrayTeste.splice(index, 1)
     }
-  },
-  data () {
-    return {}
   }
 }
 </script>
@@ -70,5 +87,4 @@ export default {
 #table-container {
     max-height: 85vh;
 }
-
 </style>
