@@ -129,7 +129,7 @@
         <div
             id="show-modal"
             @click="showModal = true"
-            class="fixed bg-indigo-700 hover:bg-indigo-800 transform transition duration-200 hover:scale-110  shadow-2xl bottom-5 right-12 px-5  py-5 rounded-full cursor-pointer "
+            class="fixed bg-indigo-700 hover:bg-indigo-800 transform transition duration-200 hover:scale-110  shadow-2xl  bottom-4 right-5 py-4 px-4 md:bottom-4 md:right-12 md:px-5 md:py-5 rounded-full cursor-pointer "
         >
             <img
                 class="text-gray-300"

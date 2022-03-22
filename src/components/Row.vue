@@ -1,55 +1,55 @@
 <template>
 
-    <div
-        class="flex mt-2 mb-2 align-middle rounded-md h-20 justify-between pr-3"
-        :id="rowData._id"
-        @click.ctrl="handleCheck($event, true)"
-    >
-
-        <div class="w-1/12 p-3  m-1   text-center self-center">
-            <Transition
-                name="check"
-                tag="div"
-            >
-                <label
-                    class="border-gray-600 rounded-md border-2 cursor-pointer px-2 checkbox relative transition-colors duration-100 ease-in-out"
-                    :class="checkValue? 'bg-green-700 border-green-700':''"
-                    :for="key"
+    <div class="grid md:grid-cols-12   grid-cols-6 gap-1     pr-3 text-xs ">
+        <div
+            class="md:flex   hidden align-middle rounded-md h-20   col-span-1 "
+            :id="rowData._id"
+            @click.ctrl="handleCheck($event, true)"
+        >
+            <div class="p-3  m-1 self-center ">
+                <Transition
+                    name="check"
+                    tag="div"
                 >
-
-                    <span
-                        v-if="checkValue"
-                        class="absolute left-0"
-                    >
-                        <img
-                            :src="require(`@/assets/check.png`)"
-                            style="width: 28px; height: 20px"
-                        />
-
-                    </span>
-
-                    <input
-                        type="checkbox"
-                        class="hidden"
-                        name="select-row"
-                        :id="key"
-                        v-model="checkValue"
-                        @change="handleCheck"
+                    <label
+                        class="border-gray-600 rounded-md border-2 cursor-pointer px-2 checkbox relative transition-colors duration-100 ease-in-out"
+                        :class="checkValue? 'bg-green-700 border-green-700':''"
+                        :for="key"
                     >
 
-                </label>
+                        <span
+                            v-if="checkValue"
+                            class="absolute left-0"
+                        >
+                            <img
+                                :src="require(`@/assets/check.png`)"
+                                style="width: 28px; height: 20px"
+                            />
 
-            </Transition>
+                        </span>
+
+                        <input
+                            type="checkbox"
+                            class="hidden"
+                            name="select-row"
+                            :id="key"
+                            v-model="checkValue"
+                            @change="handleCheck"
+                        >
+
+                    </label>
+
+                </Transition>
+            </div>
         </div>
-
-        <div class="w-1/12 p-3   m-1  self-center text-center"> {{new Date(rowData.date).toLocaleDateString()}} </div>
-        <div class="w-2/4 p-3  m-1 self-center "> {{rowData.description}} </div>
-        <span
-            class="w-2/12 p-3  m-1 self-center"
+        <div class="md:col-span-1  md:block  col-span-1  p-3   m-1  self-center text-center"> {{new Date(rowData.date).toLocaleDateString()}} </div>
+        <div class="md:col-span-3  md:col-start-4 col-start-3  col-span-4 p-3  m-1 self-center  "> {{rowData.description}} </div>
+        <div
+            class="md:col-span-1 md:col-start-8  m-1 self-center col-span-3 col-start-5 text-base"
             :class="[rowData.value> 0 ? 'text-green-300' : 'text-red-300']"
         > {{rowData.value.toFixed(2).toString().replace('.', ',')}}
-        </span>
-        <div class="w-1/6 p-3 m-1 ">
+        </div>
+        <div class="md:col-span-2 px-3 py-5 m-1 col-span-3">
             <select
                 name="category"
                 id="category"
@@ -73,7 +73,7 @@
 
             </select>
         </div>
-        <div class="w-1/6 p-3 m-1 ">
+        <div class="md:col-span-2 px-3 py-5 m-1 col-span-3">
             <select
                 name="paymentType"
                 id="paymentType"

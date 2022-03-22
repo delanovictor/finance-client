@@ -41,13 +41,9 @@ export default {}
     -moz-osx-font-smoothing: grayscale;
 }
 
-textarea {
-    padding: 3px;
-    height: 100%;
-}
-
-input {
-    padding: 3px;
+textarea,
+input[type="text"] {
+    height: 45px;
 }
 
 .list-enter-active,

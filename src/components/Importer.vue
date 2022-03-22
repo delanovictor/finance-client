@@ -3,7 +3,7 @@
         <div class="modal-mask">
             <div class="modal-wrapper">
 
-                <div class="modal-container bg-gray-800  rounded-xl">
+                <div class="modal-container bg-gray-800  rounded-xl md:py-5 md:px-8 px-2 pb-8 pt-2">
                     <div class="modal-close float-right ml-2">
                         <button
                             class="modal-default-button"
@@ -18,20 +18,22 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="edit-rows overflow-auto border-2 border-gray-700 rounded-2xl overflow-x-hidden">
+                        <div class="w-full md:w-auto edit-rows overflow-auto border-2 border-gray-700 rounded-2xl overflow-x-hidden">
 
                             <TransitionGroup
                                 name="list"
                                 tag="ul"
                             >
+
                                 <li
                                     v-for="(rowData, index) in newRows"
                                     :key="rowData.key"
                                 >
 
                                     <AddRow
-                                        :key="index"
+                                        :key="rowData.key"
                                         :index="index"
+                                        class="transition-colors duration-500 ease-in-out"
                                         :class="[index % 2 == 0 ? 'bg-gray-800' : 'bg-gray-900', 'text-gray-100']"
                                         :dateEditable="rowData.manual"
                                         v-model:date="rowData.date"
@@ -43,11 +45,28 @@
                                     />
 
                                 </li>
-
+                                <li
+                                    class="transition-colors duration-200 ease-in-out  p-3"
+                                    :class="[newRows.length % 2 == 0 ? 'bg-gray-800' : 'bg-gray-900', 'text-gray-100']"
+                                >
+                                    <div class="text-center text-gray-300 mb-2">Adicionar</div>
+                                    <div class="w-full text-center flex justify-center cursor-pointer">
+                                        <div
+                                            @click="createRow()"
+                                            class="  text-gray-300 text-4xl rounded-full py-3 px-3 bg-gray-500 hover:bg-gray-700"
+                                        >
+                                            <img
+                                                :src="require(`@/assets/plus.png`)"
+                                                class="text-gray-300"
+                                                style="width: 20px; height: 20px"
+                                            />
+                                        </div>
+                                    </div>
+                                </li>
                             </TransitionGroup>
 
                         </div>
-                        <div class="flex justify-between  self-center mx-5  pt-4 cursor-pointer bottom-0">
+                        <div class="flex justify-between  self-center md:mx-5 mx-2  pt-4 cursor-pointer bottom-0">
                             <div class="">
                                 <label
                                     for="importer"
@@ -64,19 +83,6 @@
                                     class="hidden"
                                     @change="importFile"
                                 >
-                            </div>
-
-                            <div class="w-full text-center flex justify-center">
-                                <div
-                                    @click="createRow()"
-                                    class="  text-gray-300 text-4xl rounded-full py-3 px-3 bg-gray-500 hover:bg-gray-700"
-                                >
-                                    <img
-                                        :src="require(`@/assets/plus.png`)"
-                                        class="text-gray-300"
-                                        style="width: 20px; height: 20px"
-                                    />
-                                </div>
                             </div>
 
                             <button
@@ -180,7 +186,7 @@ export default {
       const today = year + '-' + month + '-' + day
 
       console.log(today)
-      this.newRows.unshift({
+      this.newRows.push({
         manual: true,
         value: '0.00',
         category: 'Outros>Indefinido',
@@ -245,9 +251,8 @@ export default {
 }
 
 .modal-container {
-    width: 1000px;
+    width: 90vw;
     margin: 25px auto;
-    padding: 20px 30px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
 
     font-family: Helvetica, Arial, sans-serif;
@@ -266,5 +271,17 @@ export default {
 
 .edit-rows {
     height: 50vh;
+}
+
+@media only screen and (max-width: 600px) {
+    .edit-rows {
+        height: 75vh;
+    }
+
+    .modal-body {
+        margin: 20px 0;
+        transition: height 1s ease;
+        max-height: 80vh;
+    }
 }
 </style>
