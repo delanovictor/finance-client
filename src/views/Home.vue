@@ -42,93 +42,74 @@
                 </div>
             </div>
 
-            <div
-                class="cursor-pointer "
-                @click="deleteSelected"
-            >
-                <img
-                    src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png"
-                    style="width: 25px; height: 25px"
-                />
-            </div>
-
         </div>
 
-        <div class=" flex text-gray-100  text-xl  text-center justify-between">
-            <div class="bg-indigo-700 w-1/5 ">R$ 20.000</div>
+        <div class=" text-gray-100  text-xl  text-center grid grid-cols-12 gap-1">
+            <div class=" md:col-span-2 md:col-start-1 md:ml-4 md:mt-1">
+                <div class="bg-gray-900 p-3 m-1 rounded-full grid grid-cols-12 gap-1 border-2 border-gray-800">
+                    <div class=" md:col-span-8 md:col-start-2">
+                        <Transition name="fade">
+                            <span v-if="activeTotal">
+                                R$ 20.000
+                            </span>
+                        </Transition>
+                    </div>
+                    <div
+                        class="md:col-span-2 md:col-start-11 cursor-pointer"
+                        @click="showTotal"
+                    >
+                        <img
+                            class="text-gray-300"
+                            :src="require(`@/assets/eye.png`)"
+                            style="width: 25px; height: 25px"
+                        />
+                    </div>
+                </div>
 
-            <div class=" flex w-1/2 justify-between">
-                <input
-                    class="w-3/4 text-gray-100 p-1 rounded-md bg-gray-900 border-gray-600 border-2"
-                    type="text"
-                    @keyup="(e)=> {filter.description = e.target.value}"
-                    placeholder="Procurar..."
-                >
+            </div>
 
-                <div class="cursor-pointer text-center">
-                    <div @click="showFilterMenu">
-                        <!-- <img
+            <Filter
+                class=" md:col-span-10 md:col-start-4"
+                v-model:category="filter.category"
+                v-model:paymentType="filter.paymentType"
+                v-model:description="filter.description"
+            />
+
+            <div @click="showFilterMenu">
+                <!-- <img
                             @v-if="!activeFilter"
                             class="text-white"
                             :src="require(`@/assets/filter.svg`)"
                             style="width: 25px; height: 25px"
                         /> -->
-                    </div>
-                    <div class="flex m-1 p-2  ">
-                        <select
-                            name="category"
-                            id="category"
-                            class="w-full bg-gray-700 p-2 rounded-lg text-sm"
-                            @change="(e)=> {filter.category = e.target.value}"
-                        >
-                            <optgroup
-                                v-for="option in categories"
-                                :key="option.category"
-                                :label="option.category"
-                            >
-                                <option
-                                    v-for="subCategory in option.subCategory"
-                                    :key="subCategory"
-                                    :value="option.category + '>' + subCategory"
-                                >{{subCategory}}
-                                </option>
-
-                            </optgroup>
-
-                        </select>
-
-                        <select
-                            name="paymentTypes"
-                            id="paymentTypes"
-                            class="w-full bg-gray-700 p-2 rounded-lg text-sm"
-                            @change="(e)=> {filter.paymentType = e.target.value}"
-                        >
-                            <option
-                                v-for="type in paymentTypes"
-                                :key="type"
-                                :value="type"
-                            >{{type}}
-                            </option>
-
-                        </select>
-
-                        <div
-                            class=" justify-end pt-4 cursor-pointer"
-                            @click="resetFilter"
-                        >
-                            x </div>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class=" mt-10 bg-gray-900 shadow-2xl">
+        <div class=" mt-2 bg-gray-900 shadow-2xl">
             <Table :filter="filter" />
         </div>
+        <Transition name="fade">
+            <div
+                class="cursor-pointer "
+                @click="deleteSelected"
+            >
+                <div
+                    id="show-modal"
+                    v-if="this.getSelectedRows().length > 0"
+                    class="fixed bg-red-700 hover:bg-red-800 transform transition duration-200 hover:scale-110  shadow-2xl  bottom-10 right-5 py-4 px-4 md:bottom-24 md:right-16 md:px-2 md:py-2 rounded-full cursor-pointer "
+                >
+                    <img
+                        class="text-gray-300"
+                        :src="require(`@/assets/trash.png`)"
+                        style="width: 22px; height: 22px"
+                    />
+                </div>
+            </div>
 
+        </Transition>
         <div
             id="show-modal"
-            @click="showModal = true"
+            @click="showImporter = true"
             class="fixed bg-indigo-700 hover:bg-indigo-800 transform transition duration-200 hover:scale-110  shadow-2xl  bottom-4 right-5 py-4 px-4 md:bottom-4 md:right-12 md:px-5 md:py-5 rounded-full cursor-pointer "
         >
             <img
@@ -138,12 +119,15 @@
             />
         </div>
 
-        <transition name="modal">
+        <Transition name="fade">
             <Importer
-                v-if="showModal"
-                @close="showModal = false"
+                v-if="showImporter"
+                @close="showImporter = false"
             />
-        </transition>
+        </Transition>
+
+        <ShortcutHandler>
+        </ShortcutHandler>
 
     </div>
 </template>
@@ -152,6 +136,8 @@
 import Table from '@/components/Table.vue'
 import AddRow from '@/components/AddRow.vue'
 import Importer from '@/components/Importer.vue'
+import Filter from '@/components/Filter.vue'
+import ShortcutHandler from '@/components/ShortcutHandler.vue'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -159,14 +145,16 @@ export default {
   components: {
     Table,
     AddRow,
-    Importer
+    Importer,
+    Filter,
+    ShortcutHandler
   },
   data () {
     return {
-      activeMenu: false,
-      showModal: false,
+      showImporter: false,
       activeEdit: false,
       activeFilter: false,
+      activeTotal: false,
       editCategory: null,
       filter: {}
     }
@@ -184,18 +172,15 @@ export default {
       this.activeEdit = !this.activeEdit
     },
     showFilterMenu () {
-      console.log(this.filter)
       this.activeFilter = !this.activeFilter
     },
-    resetFilter () {
-      this.filter = {}
+    showTotal () {
+      this.activeTotal = !this.activeTotal
     },
     updateRow (rowData) {
       this.rows = rowData
     },
-    showMenu () {
-      this.activeMenu = !this.activeMenu
-    },
+
     importData () {},
     deleteSelected () {
       console.log('delete')
@@ -204,11 +189,7 @@ export default {
     ...mapActions(['fetchRows', 'getSelected', 'removeRows', 'editRows'])
   },
   computed: {
-    ...mapGetters(['getSelectedRows']),
-    ...mapGetters({
-      categories: 'getCategories',
-      paymentTypes: 'getPaymentTypes'
-    })
+    ...mapGetters(['getSelectedRows'])
   },
   async mounted () {
     await this.fetchRows()
@@ -221,16 +202,16 @@ export default {
     overflow: auto;
 }
 
-.modal-enter-from {
+.fade-enter-from {
     opacity: 0;
 }
-.modal-enter-active {
+.fade-enter-active {
     transition: all 0.3s ease;
 }
-.modal-leave-to {
+.fade-leave-to {
     opacity: 0;
 }
-.modal-leave-active {
+.fade-leave-active {
     transition: all 0.3s ease;
 }
 </style>
